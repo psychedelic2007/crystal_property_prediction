@@ -1,0 +1,17 @@
+{
+  "best_mae": 0.12562850586458976,
+  "best_r2": null,
+  "hyperparameters": {
+    "hidden_dim": 128,
+    "depth": 5,
+    "dropout": 0.003582702023195952,
+    "learning_rate": 0.000997037490198764,
+    "batch_size": 16,
+    "weight_decay": 5.5115184309739725e-06,
+    "energy_weight": 1.500545904288874,
+    "stability_weight": 0.11062374383146341,
+    "crystal_weight": 0.0618139280223411,
+    "material_weight": 0.07872829789863985
+  },
+  "trial_number": 25
+}
