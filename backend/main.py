@@ -56,11 +56,11 @@ def _load_real_model() -> Optional[torch.nn.Module]:
     """Load the user's trained model using the exact same method as material_project_prediction.py."""
     try:
         project_root = Path(__file__).resolve().parents[1]
-        model_path = project_root / "src" / "model" / "final_best_model.pth"
-        config_path = project_root / "src" / "model" / "best_config.json"
+        model_path = project_root / "src" / "models" / "final_best_model.pth"
+        config_path = project_root / "src" / "models" / "best_config.json"
         
         # Ensure model modules can be imported
-        sys.path.append(str(project_root / "src" / "model"))
+        sys.path.append(str(project_root / "src" / "models"))
         
         if not model_path.exists():
             print(f"Model file not found at {model_path}")
