@@ -39,7 +39,9 @@ app.add_middleware(
         "http://0.0.0.0:5173",
         "http://0.0.0.0:3000",
         "http://0.0.0.0:8080",
-        "https://crystal-predict.onrender.com"
+        "https://crystal-predict.onrender.com",
+        "https://crystal-property-prediction.onrender.com",
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
