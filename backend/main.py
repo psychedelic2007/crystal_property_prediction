@@ -18,7 +18,7 @@ import asyncio
 from pathlib import Path
 
 # Import the CIF processing functions
-from cif_processor import process_cif_file, extract_structure_info, predict_from_cif
+from .cif_processor import process_cif_file, extract_structure_info, predict_from_cif
 
 app = FastAPI(
     title="Crystal Structure Prediction API",
