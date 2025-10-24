@@ -120,7 +120,7 @@ class CrystalPredictAPI {
       return response.json();
     } catch (error) {
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Network error: Unable to connect to backend server. Please ensure the backend is running on http://localhost:8000');
+        throw new Error('Network error: Unable to connect to backend server at ${this.baseUrl}');
       }
       throw error;
     }
