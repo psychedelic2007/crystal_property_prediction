@@ -46,6 +46,7 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # In-memory job storage (in production, use Redis or database)
