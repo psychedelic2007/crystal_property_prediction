@@ -1,7 +1,7 @@
 // API client for FastAPI backend
 // This connects the React frontend to your FastAPI model-serving backend
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://crystal-property-prediction.onrender.com';
 
 export interface SubmitJobPayload {
   file?: File;
