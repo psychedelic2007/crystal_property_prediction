@@ -43,7 +43,7 @@ app.add_middleware(
         "https://crystal-property-prediction.onrender.com",
         "*"
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
