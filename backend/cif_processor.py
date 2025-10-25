@@ -63,20 +63,51 @@ def structure_to_pyg(structure, space_group=1):
     from pymatgen.analysis.local_env import CrystalNN
     from torch_geometric.utils import to_undirected
     
-    # Build graph with CrystalNN (same as training)
+    # Try CrystalNN first (same as training)
     try:
         graph = StructureGraph.from_local_env_strategy(
             structure, 
             CrystalNN(x_diff_weight=0.0)
         )
-    except:
-        # Fallback for problematic structures
-        return None
-    
-    edges = list(graph.graph.edges())
-    if len(edges) == 0:
-        return None
+        edges = list(graph.graph.edges())
         
+        # If no edges found, try fallback
+        if len(edges) == 0:
+            raise ValueError("No edges found with CrystalNN")
+            
+    except Exception as e:
+        print(f"CrystalNN failed: {e}, trying distance-based fallback...")
+        # Fallback: distance-based bond detection
+        edges = []
+        max_distance = 5.0  # Angstroms - adjust as needed
+        
+        for i in range(len(structure)):
+            neighbors = structure.get_neighbors(structure[i], r=max_distance)
+            for neighbor in neighbors:
+                j = neighbor.index
+                if i < j:  # Avoid duplicates
+                    edges.append((i, j))
+        
+        if len(edges) == 0:
+            # Last resort: connect each atom to its nearest neighbor
+            print("Distance-based method failed, using nearest neighbor fallback...")
+            for i in range(len(structure)):
+                distances = []
+                for j in range(len(structure)):
+                    if i != j:
+                        dist = structure.get_distance(i, j)
+                        distances.append((j, dist))
+                
+                if distances:
+                    # Connect to nearest neighbor
+                    nearest_idx = min(distances, key=lambda x: x[1])[0]
+                    if i < nearest_idx:
+                        edges.append((i, nearest_idx))
+        
+        if len(edges) == 0:
+            print("ERROR: Could not create any edges for this structure")
+            return None
+    
     edge_index = torch.tensor(edges, dtype=torch.long).t()
     edge_index = to_undirected(edge_index)
     
@@ -100,8 +131,12 @@ def structure_to_pyg(structure, space_group=1):
         dist = structure.get_distance(i, j)
         
         # Coordination counts (not normalized!)
-        coord_i = len(structure.get_neighbors(structure[i], r=3.5))
-        coord_j = len(structure.get_neighbors(structure[j], r=3.5))
+        try:
+            coord_i = len(structure.get_neighbors(structure[i], r=3.5))
+            coord_j = len(structure.get_neighbors(structure[j], r=3.5))
+        except:
+            coord_i = 6  # Default coordination
+            coord_j = 6
         
         edge_attrs.append([dist, coord_i, coord_j])
     
@@ -120,7 +155,6 @@ def structure_to_pyg(structure, space_group=1):
     )
     
     return data
-
 
 def process_cif_file(cif_path: str) -> Optional[Data]:
     """
